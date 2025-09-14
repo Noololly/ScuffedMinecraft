@@ -62,7 +62,7 @@ jobs:
           run: |
             mkdir build
             cd build
-            cmake ../ScuffedMinecraft -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
+            cmake .. -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
             cmake --build . --config Release -j $(nproc)
 
         - name: Build with clang
@@ -70,7 +70,7 @@ jobs:
           run: |
               mkdir build
               cd build
-              cmake ../ScuffedMinecraft -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+              cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
               cmake --build . --config Release -j $(nproc)
 
         - name: Upload artifact
@@ -92,7 +92,7 @@ jobs:
           run: |
             mkdir build
             cd build
-            cmake ../ScuffedMinecraft
+            cmake ..
             cmake --build . -j $(nproc)
 
         - name: Upload artifact
