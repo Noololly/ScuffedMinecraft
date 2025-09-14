@@ -26,6 +26,24 @@ namespace WillowVox
 	{
 	public:
 		// Game
+		// Specialization for no arguments to fix format security warning
+		static void Log(const char* msg)
+		{
+			std::time_t t = std::time(nullptr);
+			std::tm now;
+			SAFE_LOCALTIME(&now, &t);
+			printf(LOG_COLOR_RESET "[%d:%d:%d App] ", now.tm_hour, now.tm_min, now.tm_sec);
+			printf("%s", msg);
+			printf("\n");
+
+			std::fstream logFile("log.txt");
+			logFile << "[" << std::setfill('0') << std::setw(2) << now.tm_hour << ":"
+				<< std::setfill('0') << std::setw(2) << now.tm_min << ":"
+				<< std::setfill('0') << std::setw(2) << now.tm_sec << " App] "
+				<< msg << std::endl;
+			logFile.close();
+		}
+
 		template <typename... Args>
 		static void Log(const char* msg, Args... args)
 		{
@@ -46,6 +64,24 @@ namespace WillowVox
 			logFile.close();
 		}
 
+		// Specialization for no arguments to fix format security warning
+		static void Warn(const char* msg)
+		{
+			std::time_t t = std::time(nullptr);
+			std::tm now;
+			SAFE_LOCALTIME(&now, &t);
+			printf(LOG_COLOR_APP_WARN "[%d:%d:%d App] WARN: ", now.tm_hour, now.tm_min, now.tm_sec);
+			printf("%s", msg);
+			printf(LOG_COLOR_RESET "\n");
+
+			std::fstream logFile("log.txt");
+			logFile << "[" << std::setfill('0') << std::setw(2) << now.tm_hour << ":"
+				<< std::setfill('0') << std::setw(2) << now.tm_min << ":"
+				<< std::setfill('0') << std::setw(2) << now.tm_sec << " App] WARN: "
+				<< msg << std::endl;
+			logFile.close();
+		}
+
 		template <typename... Args>
 		static void Warn(const char* msg, Args... args)
 		{
@@ -63,6 +99,24 @@ namespace WillowVox
 				<< std::setfill('0') << std::setw(2) << now.tm_min << ":"
 				<< std::setfill('0') << std::setw(2) << now.tm_sec << " App] WARN: "
 				<< formattedMsg << std::endl;
+			logFile.close();
+		}
+
+		// Specialization for no arguments to fix format security warning
+		static void Error(const char* msg)
+		{
+			std::time_t t = std::time(nullptr);
+			std::tm now;
+			SAFE_LOCALTIME(&now, &t);
+			printf(LOG_COLOR_APP_ERROR "[%d:%d:%d App] ERROR: ", now.tm_hour, now.tm_min, now.tm_sec);
+			printf("%s", msg);
+			printf(LOG_COLOR_RESET "\n");
+
+			std::fstream logFile("log.txt");
+			logFile << "[" << std::setfill('0') << std::setw(2) << now.tm_hour << ":"
+				<< std::setfill('0') << std::setw(2) << now.tm_min << ":"
+				<< std::setfill('0') << std::setw(2) << now.tm_sec << " App] ERROR: "
+				<< msg << std::endl;
 			logFile.close();
 		}
 
@@ -87,6 +141,24 @@ namespace WillowVox
 		}
 
 		// Engine
+		// Specialization for no arguments to fix format security warning
+		static void EngineLog(const char* msg)
+		{
+			std::time_t t = std::time(nullptr);
+			std::tm now;
+			SAFE_LOCALTIME(&now, &t);
+			printf(LOG_COLOR_ENGINE_LOG "[%d:%d:%d Engine] ", now.tm_hour, now.tm_min, now.tm_sec);
+			printf("%s", msg);
+			printf(LOG_COLOR_RESET "\n");
+
+			std::fstream logFile("log.txt");
+			logFile << "[" << std::setfill('0') << std::setw(2) << now.tm_hour << ":"
+				<< std::setfill('0') << std::setw(2) << now.tm_min << ":"
+				<< std::setfill('0') << std::setw(2) << now.tm_sec << " Engine] "
+				<< msg << std::endl;
+			logFile.close();
+		}
+
 		template <typename... Args>
 		static void EngineLog(const char* msg, Args... args)
 		{
@@ -107,6 +179,24 @@ namespace WillowVox
 			logFile.close();
 		}
 
+		// Specialization for no arguments to fix format security warning
+		static void EngineWarn(const char* msg)
+		{
+			std::time_t t = std::time(nullptr);
+			std::tm now;
+			SAFE_LOCALTIME(&now, &t);
+			printf(LOG_COLOR_ENGINE_WARN "[%d:%d:%d Engine] WARN: ", now.tm_hour, now.tm_min, now.tm_sec);
+			printf("%s", msg);
+			printf(LOG_COLOR_RESET "\n");
+
+			std::fstream logFile("log.txt");
+			logFile << "[" << std::setfill('0') << std::setw(2) << now.tm_hour << ":"
+				<< std::setfill('0') << std::setw(2) << now.tm_min << ":"
+				<< std::setfill('0') << std::setw(2) << now.tm_sec << " Engine] WARN: "
+				<< msg << std::endl;
+			logFile.close();
+		}
+
 		template <typename... Args>
 		static void EngineWarn(const char* msg, Args... args)
 		{
@@ -124,6 +214,24 @@ namespace WillowVox
 				<< std::setfill('0') << std::setw(2) << now.tm_min << ":"
 				<< std::setfill('0') << std::setw(2) << now.tm_sec << " Engine] WARN: "
 				<< formattedMsg << std::endl;
+			logFile.close();
+		}
+
+		// Specialization for no arguments to fix format security warning
+		static void EngineError(const char* msg)
+		{
+			std::time_t t = std::time(nullptr);
+			std::tm now;
+			SAFE_LOCALTIME(&now, &t);
+			printf(LOG_COLOR_ENGINE_ERROR "[%d:%d:%d Engine] ERROR: ", now.tm_hour, now.tm_min, now.tm_sec);
+			printf("%s", msg);
+			printf(LOG_COLOR_RESET "\n");
+
+			std::fstream logFile("log.txt");
+			logFile << "[" << std::setfill('0') << std::setw(2) << now.tm_hour << ":"
+				<< std::setfill('0') << std::setw(2) << now.tm_min << ":"
+				<< std::setfill('0') << std::setw(2) << now.tm_sec << " Engine] ERROR: "
+				<< msg << std::endl;
 			logFile.close();
 		}
 

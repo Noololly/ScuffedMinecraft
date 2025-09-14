@@ -11,28 +11,9 @@ add_executable(ScuffedMinecraft
     src/main.cpp 
     src/CrosshairMaterial.cpp
     src/BlockOutlineMaterial.cpp
+    WillowVoxEngine/src/WillowVoxStubs.cpp  # Minimal stub implementations
 )
 
-# set variables based on build type
-if (CMAKE_CONFIGURATION_TYPES)
-    set(WILLOWVOX_COPY_PATH ${CMAKE_BINARY_DIR}/bin/$<CONFIG>)
-    set(WILLOWVOX_DLL ${CMAKE_SOURCE_DIR}/WillowVoxEngine/bin/$<CONFIG>/WillowVoxEngine${CMAKE_SHARED_LIBRARY_SUFFIX})
-    set(WILLOWVOX_LIB ${CMAKE_SOURCE_DIR}/WillowVoxEngine/lib/$<CONFIG>/WillowVoxEngine${CMAKE_STATIC_LIBRARY_SUFFIX})
-else()
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        set(WILLOWVOX_DLL ${CMAKE_SOURCE_DIR}/WillowVoxEngine/bin/debug/WillowVoxEngine${CMAKE_SHARED_LIBRARY_SUFFIX})
-        set(WILLOWVOX_LIB ${CMAKE_SOURCE_DIR}/WillowVoxEngine/lib/debug/WillowVoxEngine${CMAKE_STATIC_LIBRARY_SUFFIX})
-        set(WILLOWVOX_COPY_PATH $<TARGET_FILE_DIR:ScuffedMinecraft>)
-    else()
-        set(WILLOWVOX_DLL ${CMAKE_SOURCE_DIR}/WillowVoxEngine/bin/release/WillowVoxEngine${CMAKE_SHARED_LIBRARY_SUFFIX})
-        set(WILLOWVOX_LIB ${CMAKE_SOURCE_DIR}/WillowVoxEngine/lib/release/WillowVoxEngine${CMAKE_STATIC_LIBRARY_SUFFIX})
-        set(WILLOWVOX_COPY_PATH $<TARGET_FILE_DIR:ScuffedMinecraft>)
-    endif()
-endif()
-
-message("WILLOWVOX_COPY_PATH: ${WILLOWVOX_COPY_PATH}")
-message("WILLOWVOX_DLL: ${WILLOWVOX_DLL}")
-message("WILLOWVOX_LIB: ${WILLOWVOX_LIB}")
 # Set output directories
 set_target_properties(ScuffedMinecraft PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
@@ -43,24 +24,29 @@ target_include_directories(ScuffedMinecraft PRIVATE
     include                     # Game-specific includes
     WillowVoxEngine/include     # WillowVox headers
     WillowVoxEngine/thirdparty  # WillowVox dependencies
+    WillowVoxEngine/thirdparty/GLFW  # GLFW headers
 )
+
+# Add imgui subdirectory to build it from source
+add_subdirectory(WillowVoxEngine/thirdparty/imgui)
+
+# Find required system packages
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLFW3 REQUIRED glfw3)
+find_package(OpenGL REQUIRED)
 
 # Link dependencies
 target_link_libraries(ScuffedMinecraft PRIVATE 
-    ${WILLOWVOX_LIB}
-    ${CMAKE_SOURCE_DIR}/WillowVoxEngine/thirdparty/imgui${CMAKE_STATIC_LIBRARY_SUFFIX}
+    imgui
+    ${GLFW3_LIBRARIES}
+    ${OPENGL_LIBRARIES}
 )
 
-# Copy dynamic libraries to the output directory (Windows/Linux)
-add_custom_command(TARGET ScuffedMinecraft POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${WILLOWVOX_DLL}
-    ${WILLOWVOX_COPY_PATH}
-)
+# Copy assets to the output directory
 add_custom_target(copy_assets ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/assets
-    ${WILLOWVOX_COPY_PATH}/assets
+    ${CMAKE_BINARY_DIR}/bin/assets
     COMMENT "Copying assets"
 )
 

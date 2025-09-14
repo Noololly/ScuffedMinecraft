@@ -1,5 +1,3 @@
-#pragma once
-
 #include <WillowVox/core/Application.h>
 #include <WillowVox/rendering/Mesh.h>
 #include <WillowVox/rendering/BaseMaterial.h>
