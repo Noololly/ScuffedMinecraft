@@ -6,9 +6,9 @@ on:
 # 1. Checkout repo
 # 2. mkdir build
 # 3. cd build
-# 4. cmake ../ScuffedMinecraft
+# 4. cmake ..
 # 5. cmake --build .
-# zip ScuffedMinecraft/bin/* and upload it as an artifact
+# zip build/bin/* and upload it as an artifact
 
 jobs:
   build-linux:
@@ -26,13 +26,13 @@ jobs:
         run: |
           mkdir -p build
           cd build
-          cmake ../ScuffedMinecraft
+          cmake ..
           cmake --build . --config Release -j $(nproc)
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-linux
-          path: ScuffedMinecraft/bin/*
+          path: build/bin/*
 
   # Remove Windows build entirely to simplify cross-platform support
