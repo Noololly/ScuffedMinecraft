@@ -1,0 +1,38 @@
+on:
+  push:
+    branches:
+      - main
+
+# 1. Checkout repo
+# 2. mkdir build
+# 3. cd build
+# 4. cmake ../ScuffedMinecraft
+# 5. cmake --build .
+# zip ScuffedMinecraft/bin/* and upload it as an artifact
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    name: Build on Linux
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y cmake gcc g++ zip mesa-common-dev libglu1-mesa-dev libglfw3-dev
+
+      - name: Build
+        run: |
+          mkdir -p build
+          cd build
+          cmake ../ScuffedMinecraft
+          cmake --build . --config Release -j $(nproc)
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-linux
+          path: ScuffedMinecraft/bin/*
+
+  # Remove Windows build entirely to simplify cross-platform support
